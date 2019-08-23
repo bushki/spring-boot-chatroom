@@ -151,8 +151,14 @@
      */
     function login() {
         // TODO: complete the login function
-        var username = document.getElementById("username").value;
-        window.location.href = "index?username="+username;
+        var user = document.getElementById("username").value;
+        var data = {
+            username: user
+          }
+        $.get("index", data, function(response){
+            console.log('inside response');
+            //todo start chat
+         });
     }
 
     /**
