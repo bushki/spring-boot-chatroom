@@ -1,5 +1,6 @@
 package edu.udacity.java.nano.chat;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,11 +52,18 @@ public class WebSocketChatServer {
     public void onMessage(Session session, String jsonStr) throws IOException, EncodeException {
         //TODO: add send message.
 
-        for (Map.Entry<String, Session> entry : onlineSessions.entrySet()) {
-            String key = entry.getKey();
-            Session value = (Session)entry.getValue();
+        Message incoming = JSON.parseObject(jsonStr, Message.class);
 
-            value.getBasicRemote().sendObject(jsonStr);
+        for (Session s : onlineSessions.values()) {
+           if(s.isOpen()) {
+               try {
+                   Message message = new Message("SPEAK","some user",
+                           "my message from the server", onlineSessions.size());
+
+                   session.getBasicRemote().sendText(JSON.toJSONString(message) );
+               }
+               catch (IOException e) { e.printStackTrace(); }
+           }
         }
     }
 
