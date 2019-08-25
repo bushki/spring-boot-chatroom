@@ -6,8 +6,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.lang.String.format;
 
 /**
  * WebSocket Server
@@ -33,18 +36,27 @@ public class WebSocketChatServer {
      * Open connection, 1) add session, 2) add user.
      */
     @OnOpen
-    public void onOpen(@PathParam("username") String username) {
+    public void onOpen(Session session, @PathParam("username") String username) {
         //TODO: add on open connection.
         //String u = request.getSession().getAttribute("myusername").toString();
-        System.out.println("inside onOpen");
+        System.out.println(format("%s joined the chat room.", username));
+
+        onlineSessions.put(username,session);
     }
 
     /**
      * Send message, 1) get username and session, 2) send message to all.
      */
     @OnMessage
-    public void onMessage(Session session, String jsonStr) {
+    public void onMessage(Session session, String jsonStr) throws IOException, EncodeException {
         //TODO: add send message.
+
+        for (Map.Entry<String, Session> entry : onlineSessions.entrySet()) {
+            String key = entry.getKey();
+            Session value = (Session)entry.getValue();
+
+            value.getBasicRemote().sendObject(jsonStr);
+        }
     }
 
     /**

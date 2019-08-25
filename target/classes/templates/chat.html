@@ -42,6 +42,10 @@
                         <button class="mdui-btn mdui-color-theme mdui-ripple"
                                 onclick="clearMsg()">Clear
                         </button>
+
+                        <button id="send" class="mdui-btn mdui-color-theme"
+                                onclick="sendMsgToServer()">
+                            Send</button>
                     </div>
                 </div>
             </div>
@@ -141,6 +145,7 @@
      * Send messages to server use webSocket.
      */
     function sendMsgToServer() {
+    console.log('inside sendMsgToServer');
         var $message = $('#msg');
         if ($message.val()) {
             webSocket.send(JSON.stringify({username: $('#username').text(), msg: $message.val()}));
