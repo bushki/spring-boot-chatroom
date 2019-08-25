@@ -2,7 +2,9 @@ package edu.udacity.java.nano.chat;
 
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Component
-@ServerEndpoint("/chat")
+@ServerEndpoint("/chat/{username}")
 public class WebSocketChatServer {
 
     /**
@@ -31,8 +33,10 @@ public class WebSocketChatServer {
      * Open connection, 1) add session, 2) add user.
      */
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(@PathParam("username") String username) {
         //TODO: add on open connection.
+        //String u = request.getSession().getAttribute("myusername").toString();
+        System.out.println("inside onOpen");
     }
 
     /**

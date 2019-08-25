@@ -4,14 +4,41 @@ package edu.udacity.java.nano.chat;
  * WebSocket message model
  */
 public class Message {
-    public String getUserName() {
-        return userName;
+    public String getType() {
+        return type;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    // TODO: add message model.
-    private String userName;
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getOnlineCount() {
+        return onlineCount;
+    }
+
+    public void setOnlineCount(String onlineCount) {
+        this.onlineCount = onlineCount;
+    }
+
+    private String type;
+    private String username;
+    private String message;
+    private String onlineCount;
+
 }

@@ -152,14 +152,7 @@
     function login() {
         // TODO: complete the login function
         var user = document.getElementById("username").value;
-        //window.location.href = "index?username="+username;
-
-        var data = {
-        username: user
-        }
-        $.get("index", data, function(response){
-        console.log('inside response');
-            });
+        window.location.href = "index?username="+user;
     }
 
     /**
