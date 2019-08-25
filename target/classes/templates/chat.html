@@ -90,6 +90,8 @@
         var username = urlParams.get('username');    // 1234
 
         console.log('username:' + username );
+        //set username valie
+        $("#username").html(username);
         var webSocket = new WebSocket('ws://localhost:8080/chat/' + username);
         /**
          * websocket open connection.
