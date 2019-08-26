@@ -35,18 +35,21 @@ public class WebSocketChatServer {
     private static Set<WebSocketChatServer> chatEndpoints = new CopyOnWriteArraySet<>();
     private Session session;
 
-    private static void sendMessageToAll(String msg) {
+    private static void sendMessageToAll(String msg, String msgType, String username) {
         //TODO: add send message method.
 
         Message m = new Message();
         m.setMsg(msg);
         m.setOnlineCount(users.size());
-        m.setType("ENTER");
+        m.setType(msgType);
+        m.setUsername(username);
 
         chatEndpoints.forEach(endpoint -> {
             synchronized (endpoint) {
                 try {
-                    endpoint.session.getBasicRemote().sendText(JSON.toJSONString(m));
+                    if(endpoint.session.isOpen()) {
+                        endpoint.session.getBasicRemote().sendText(JSON.toJSONString(m));
+                    }
                 } catch (IOException  e) {
                     e.printStackTrace();
                 }
@@ -70,7 +73,7 @@ public class WebSocketChatServer {
 
         //broadcast
         String message = username  + " joined!";
-        sendMessageToAll(message);
+        sendMessageToAll(message,"ENTER", username);
     }
 
     /**
@@ -79,6 +82,8 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws IOException, EncodeException {
         //TODO: add send message.
+        Message incoming = JSON.parseObject(jsonStr, Message.class);
+        sendMessageToAll(incoming.getMsg(),"SPEAK",incoming.getUsername());
     }
 
     /**
