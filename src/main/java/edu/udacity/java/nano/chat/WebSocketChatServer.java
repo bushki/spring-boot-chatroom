@@ -31,6 +31,8 @@ public class WebSocketChatServer {
 
     private static void sendMessageToAll(String msg) {
         //TODO: add send message method.
+
+
     }
 
     /**
@@ -41,8 +43,10 @@ public class WebSocketChatServer {
         //TODO: add on open connection.
         //String u = request.getSession().getAttribute("myusername").toString();
         System.out.println(format("%s joined the chat room.", username));
-
         onlineSessions.put(username,session);
+//        if(onlineSessions == null || onlineSessions.size() <=0) {
+//            onlineSessions.put(username,session);
+//        }
     }
 
     /**
@@ -52,19 +56,34 @@ public class WebSocketChatServer {
     public void onMessage(Session session, String jsonStr) throws IOException, EncodeException {
         //TODO: add send message.
 
-        Message incoming = JSON.parseObject(jsonStr, Message.class);
+        SimpleMessage incoming = JSON.parseObject(jsonStr, SimpleMessage.class);
 
-        for (Session s : onlineSessions.values()) {
-           if(s.isOpen()) {
-               try {
-                   Message message = new Message("SPEAK","some user",
-                           "my message from the server", onlineSessions.size());
+        for (Map.Entry<String, Session> s : onlineSessions.entrySet()) {
+            String key = s.getKey();
+            Session currentSession = s.getValue();
+
+            if (!key.equals(incoming.getUsername()) && currentSession.isOpen()) {
+                               try {
+                   Message message = new Message("SPEAK",incoming.getUsername(),
+                           incoming.getMsg(), onlineSessions.size());
 
                    session.getBasicRemote().sendText(JSON.toJSONString(message) );
                }
-               catch (IOException e) { e.printStackTrace(); }
-           }
+                               catch (IOException e) { e.printStackTrace(); }
+            }
         }
+
+//        for (Session s : onlineSessions.values()) {
+//           if(s.isOpen()) {
+//               try {
+//                   Message message = new Message("SPEAK",incoming.getUsername(),
+//                           incoming.getMsg(), onlineSessions.size());
+//
+//                   session.getBasicRemote().sendText(JSON.toJSONString(message) );
+//               }
+//               catch (IOException e) { e.printStackTrace(); }
+//           }
+//        }
     }
 
     /**

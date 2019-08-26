@@ -33,7 +33,7 @@ public class WebSocketChatApplication {
         //TODO: add code for login to chatroom.
 
         //set username
-        request.getSession().setAttribute("myusername", username);
+        //request.getSession().setAttribute("myusername", username);
         return new ModelAndView("/chat");
     }
 }

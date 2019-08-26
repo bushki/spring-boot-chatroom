@@ -64,6 +64,7 @@
                     <!-- TODO: check online number num -->
                 </div>
                 <!-- TODO: add a message container -->
+                <div class="message-container" style="overflow: auto;"></div>
             </div>
 
         </div>
@@ -93,6 +94,7 @@
         //set username valie
         $("#username").html(username);
         var webSocket = new WebSocket('ws://localhost:8080/chat/' + username);
+        //var webSocket = new WebSocket('ws://localhost:8080/chat/);
         /**
          * websocket open connection.
          */

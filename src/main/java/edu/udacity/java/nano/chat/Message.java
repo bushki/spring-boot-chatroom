@@ -54,7 +54,7 @@ public class Message {
     private String type;
     @JSONField(name = "username")
     private String username;
-    @JSONField(name = "message")
+    @JSONField(name = "msg")
     private String msg;
     @JSONField(name = "onlineCount")
     private int onlineCount;
