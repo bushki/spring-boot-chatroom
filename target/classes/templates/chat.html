@@ -118,7 +118,7 @@
                     '<div class="mdui-card-content message-content">' + message.username + "：" + message.msg + '</div>' +
                     '</div></div>');
             }
-            if (message.type === 'ENTER') {
+            if (message.type === 'ENTER' || message.type === 'LEAVE') {
                 $messageContainer.append(
                     '<div class="mdui-card" style="margin: 10px 0;">' +
                     '<div class="mdui-card-primary">' +

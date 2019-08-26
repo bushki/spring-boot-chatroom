@@ -92,8 +92,13 @@ public class WebSocketChatServer {
     @OnClose
     public void onClose(Session session) {
         //TODO: add close connection.
+        String userName = users.get(session.getId());
         chatEndpoints.remove(this);
         users.remove(session.getId());
+
+        //broadcast
+        String message = userName  + " left :-(";
+        sendMessageToAll(message,"ENTER", userName);
     }
 
     /**
