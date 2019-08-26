@@ -47,9 +47,9 @@ public class WebSocketChatServer {
         chatEndpoints.forEach(endpoint -> {
             synchronized (endpoint) {
                 try {
-                    if(endpoint.session.isOpen()) {
+                    //if(endpoint.session.isOpen()) {
                         endpoint.session.getBasicRemote().sendText(JSON.toJSONString(m));
-                    }
+                   // }
                 } catch (IOException  e) {
                     e.printStackTrace();
                 }
@@ -92,6 +92,8 @@ public class WebSocketChatServer {
     @OnClose
     public void onClose(Session session) {
         //TODO: add close connection.
+        chatEndpoints.remove(this);
+        users.remove(session.getId());
     }
 
     /**
