@@ -62,6 +62,7 @@
                         <i class="mdui-icon material-icons">face</i></span>
                     <span class="mdui-chip-title">Online Users</span>
                     <!-- TODO: check online number num -->
+                    <span class="chat-num"></span>
                 </div>
                 <!-- TODO: add a message container -->
                 <div class="message-container" style="overflow: auto;"></div>
@@ -117,6 +118,14 @@
                     '<div class="mdui-card-content message-content">' + message.username + "：" + message.msg + '</div>' +
                     '</div></div>');
             }
+            if (message.type === 'ENTER') {
+                $messageContainer.append(
+                    '<div class="mdui-card" style="margin: 10px 0;">' +
+                    '<div class="mdui-card-primary">' +
+                    '<div class="mdui-card-content message-content">' + message.msg + '</div>' +
+                    '</div></div>');
+            }
+
             $('.chat-num').text(message.onlineCount);
             var $cards = $messageContainer.children('.mdui-card:visible').toArray();
             if ($cards.length > 5) {

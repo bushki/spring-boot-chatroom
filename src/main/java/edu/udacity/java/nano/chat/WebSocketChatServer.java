@@ -8,8 +8,11 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static java.lang.String.format;
 
@@ -27,12 +30,28 @@ public class WebSocketChatServer {
     /**
      * All chat sessions.
      */
-    private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
+    //private static Map<String, Session> onlineSessions = new ConcurrentHashMap<>();
+    private static HashMap<String, String> users = new HashMap<>();
+    private static Set<WebSocketChatServer> chatEndpoints = new CopyOnWriteArraySet<>();
+    private Session session;
 
     private static void sendMessageToAll(String msg) {
         //TODO: add send message method.
 
+        Message m = new Message();
+        m.setMsg(msg);
+        m.setOnlineCount(users.size());
+        m.setType("ENTER");
 
+        chatEndpoints.forEach(endpoint -> {
+            synchronized (endpoint) {
+                try {
+                    endpoint.session.getBasicRemote().sendText(JSON.toJSONString(m));
+                } catch (IOException  e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -41,12 +60,17 @@ public class WebSocketChatServer {
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
         //TODO: add on open connection.
-        //String u = request.getSession().getAttribute("myusername").toString();
-        System.out.println(format("%s joined the chat room.", username));
-        onlineSessions.put(username,session);
-//        if(onlineSessions == null || onlineSessions.size() <=0) {
-//            onlineSessions.put(username,session);
-//        }
+
+        //add session
+        this.session = session;
+        chatEndpoints.add(this);
+
+        //add user
+        users.put(session.getId(), username);
+
+        //broadcast
+        String message = username  + " joined!";
+        sendMessageToAll(message);
     }
 
     /**
@@ -55,35 +79,6 @@ public class WebSocketChatServer {
     @OnMessage
     public void onMessage(Session session, String jsonStr) throws IOException, EncodeException {
         //TODO: add send message.
-
-        SimpleMessage incoming = JSON.parseObject(jsonStr, SimpleMessage.class);
-
-        for (Map.Entry<String, Session> s : onlineSessions.entrySet()) {
-            String key = s.getKey();
-            Session currentSession = s.getValue();
-
-            if (!key.equals(incoming.getUsername()) && currentSession.isOpen()) {
-                               try {
-                   Message message = new Message("SPEAK",incoming.getUsername(),
-                           incoming.getMsg(), onlineSessions.size());
-
-                   session.getBasicRemote().sendText(JSON.toJSONString(message) );
-               }
-                               catch (IOException e) { e.printStackTrace(); }
-            }
-        }
-
-//        for (Session s : onlineSessions.values()) {
-//           if(s.isOpen()) {
-//               try {
-//                   Message message = new Message("SPEAK",incoming.getUsername(),
-//                           incoming.getMsg(), onlineSessions.size());
-//
-//                   session.getBasicRemote().sendText(JSON.toJSONString(message) );
-//               }
-//               catch (IOException e) { e.printStackTrace(); }
-//           }
-//        }
     }
 
     /**
