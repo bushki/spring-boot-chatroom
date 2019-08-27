@@ -6,5 +6,5 @@ spring:
     check-template: true # Check that the template exists before rendering it.
     check-template-location: true # Check that the templates location exists.
     enabled: true # Enable MVC Thymeleaf view resolution
-    prefix: classpath:/templates/ # Prefix that gets prepended to view names when building a URL.
+    prefix: classpath:/templates # Prefix that gets prepended to view names when building a URL.
     suffix: .html # Suffix that gets appended to view names when building a URL.
